@@ -300,6 +300,13 @@ function parseStackEntry(s: any): TupleItem {
         case "tvm.stackEntryNumber":
             return { type: 'int', value: BigInt(s.number.number) };
         case "tvm.stackEntryCell":
+            try {
+                if (s.cell["@type"] == "tvm.cell"){
+                    return { type: 'cell', cell: Cell.fromBase64(s.cell.bytes) };
+                }
+            }catch(e){
+                //nothing
+            }
             return { type: 'cell', cell: Cell.fromBase64(s.cell) };
         case 'tvm.stackEntryTuple':
             return { type: 'tuple', items: s.tuple.elements.map(parseStackEntry) };
